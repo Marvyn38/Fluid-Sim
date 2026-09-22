@@ -62,9 +62,9 @@ float NearDensityDerivative(float dst, float radius)
 	return DerivativeSpikyPow3(dst, radius);
 }
 
-float ViscosityKernel(float dst, float radius)
+float ViscosityKernel(float sqrdst, float radius)
 {
-	return SmoothingKernelPoly6(dst*dst, smoothingRadius);
+    return SmoothingKernelPoly6(sqrdst, smoothingRadius);
 }
 
 float2 CalculateDensity(float2 pos)
@@ -348,10 +348,9 @@ void CalculateViscosity (uint3 id : SV_DispatchThreadID)
 			// Skip if not within radius
 			if (sqrDstToNeighbour > sqrRadius) continue;
 
-			float dst = sqrt(sqrDstToNeighbour);
 			float2 neighbourVelocity = Velocities[neighbourIndex];
-			viscosityForce += (neighbourVelocity - velocity) * ViscosityKernel(dst, smoothingRadius);
-		}
+            viscosityForce += (neighbourVelocity - velocity) * ViscosityKernel(sqrDstToNeighbour, smoothingRadius);
+        }
 
 	}
 	Velocities[id.x] += viscosityForce * viscosityStrength * deltaTime;
