@@ -450,9 +450,8 @@ void CalculateViscosity(uint3 id : SV_DispatchThreadID)
                 continue;
 
             // Calculate viscosity
-            float dst = sqrt(sqrDstToNeighbour);
             float3 neighbourVelocity = Velocities[neighbourIndex];
-            viscosityForce += (neighbourVelocity - velocity) * SmoothingKernelPoly6(dst, smoothingRadius);
+            viscosityForce += (neighbourVelocity - velocity) * SmoothingKernelPoly6(sqrDstToNeighbour, smoothingRadius);
         }
     }
     Velocities[id.x] += viscosityForce * viscosityStrength * deltaTime;
@@ -526,8 +525,7 @@ void UpdateWhiteParticles(uint3 id : SV_DispatchThreadID)
 
             if (sqrDstToNeighbour < sqrRadius)
             {
-                float dstToNeighbour = sqrt(sqrDstToNeighbour);
-                float influenceWeight = SmoothingKernelPoly6(dstToNeighbour, smoothingRadius);
+                float influenceWeight = SmoothingKernelPoly6(sqrDstToNeighbour, smoothingRadius);
 
                 // Add up velocities of nearby fluid particles, weighted smoothly by distance.
                 // Also add up the weights so that we can compute the average fluid velocity.

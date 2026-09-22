@@ -4,11 +4,12 @@ const float SpikyPow2ScalingFactor;
 const float SpikyPow3DerivativeScalingFactor;
 const float SpikyPow2DerivativeScalingFactor;
 
-float SmoothingKernelPoly6(float dst, float radius)
+float SmoothingKernelPoly6(float dstsqr, float radius)
 {
-	if (dst < radius)
+    float radiussqr = radius * radius;
+    if (dstsqr < radiussqr)
 	{
-		float v = radius * radius - dst * dst;
+        float v = radiussqr - dstsqr;
 		return v * v * v * Poly6ScalingFactor;
 	}
 	return 0;

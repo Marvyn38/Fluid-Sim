@@ -14,12 +14,14 @@ float LinearKernel(float dst, float radius)
     return 0;
 }
 
-float SmoothingKernelPoly6(float dst, float radius)
+float SmoothingKernelPoly6(float dstsqr, float radius)
 {
-	if (dst < radius)
+    float radiussqr = radius * radius;
+
+    if (dstsqr < radiussqr)
 	{
 		float scale = 315 / (64 * PI * pow(abs(radius), 9));
-		float v = radius * radius - dst * dst;
+        float v = radiussqr - dstsqr;
 		return v * v * v * scale;
 	}
 	return 0;
@@ -69,7 +71,7 @@ float DerivativeSpikyPow2(float dst, float radius)
 float DensityKernel(float dst, float radius)
 {
 	//return SmoothingKernelPoly6(dst, radius);
-	return SpikyKernelPow2(dst, radius);
+    return SpikyKernelPow2(dst, radius);
 }
 
 float NearDensityKernel(float dst, float radius)

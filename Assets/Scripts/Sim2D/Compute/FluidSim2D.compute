@@ -64,7 +64,7 @@ float NearDensityDerivative(float dst, float radius)
 
 float ViscosityKernel(float dst, float radius)
 {
-	return SmoothingKernelPoly6(dst, smoothingRadius);
+	return SmoothingKernelPoly6(dst*dst, smoothingRadius);
 }
 
 float2 CalculateDensity(float2 pos)
