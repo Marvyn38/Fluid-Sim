@@ -29,43 +29,29 @@ float SmoothingKernelPoly6(float dstsqr, float radius)
 
 float SpikyKernelPow3(float dst, float radius)
 {
-	if (dst < radius)
-	{
-		float v = radius - dst;
-		return v * v * v * K_SpikyPow3;
-	}
-	return 0;
+
+    float v = max(radius - dst, 0.0);
+    return v * v * v * K_SpikyPow3;
+
 }
 
 //Integrate[(h-r)^2 r^2 Sin[θ], {r, 0, h}, {θ, 0, π}, {φ, 0, 2*π}]
 float SpikyKernelPow2(float dst, float radius)
 {
-	if (dst < radius)
-	{
-		float v = radius - dst;
-		return v * v * K_SpikyPow2;
-	}
-	return 0;
+    float v = max(radius - dst, 0.0);
+    return v * v * K_SpikyPow2;
 }
 
 float DerivativeSpikyPow3(float dst, float radius)
-{
-	if (dst <= radius)
-	{
-		float v = radius - dst;
-		return -v * v * K_SpikyPow3Grad;
-	}
-	return 0;
+{	
+    float v = max(radius - dst, 0.0);
+    return -v * v * K_SpikyPow3Grad;
 }
 
 float DerivativeSpikyPow2(float dst, float radius)
 {
-	if (dst <= radius)
-	{
-		float v = radius - dst;
-		return -v * K_SpikyPow2Grad;
-	}
-	return 0;
+    float v = max(radius - dst, 0.0);
+    return -v * K_SpikyPow2Grad;
 }
 
 float DensityKernel(float dst, float radius)
