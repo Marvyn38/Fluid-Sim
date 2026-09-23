@@ -417,7 +417,12 @@ Shader "Fluid/Raymarching"
                 if (dot(rayDir, rayDir) < 0.5) return info;
 
                 float2 boundsDstInfo = RayBoxDst(-boundsSize * 0.5, boundsSize * 0.5, origin, rayDir);
+
+
                 float r = (RandomValue(rngState) - 0.5) * viewMarchStepSize * 0.4 * 1;
+
+
+
                 bool hasExittedFluid = !IsInsideFluid(origin);
                 origin = origin + rayDir * (boundsDstInfo.x + r);
 

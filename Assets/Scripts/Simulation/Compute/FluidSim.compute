@@ -98,6 +98,49 @@ float Remap01(float val, float minVal, float maxVal)
     return saturate((val - minVal) / (maxVal - minVal));
 }
 
+
+void ResolveCollisionsTest(inout float3 pos, inout float3 vel, float collisionDamping)
+{
+    // Transform position/velocity to the local space of the bounding box
+    float3 posLocal = mul(worldToLocal, float4(pos, 1)).xyz;
+    
+    float3 velocityLocal = mul(worldToLocal, float4(vel, 0)).xyz;
+
+    // Half-size of the INNER exclusion box
+    const float3 halfSize = sin(simTime) * 0.4;
+    //halfSize = sin(simTime) * 0.1;
+
+    // Distance from the particle to each face of the inner box.
+    // Positive = particle is inside the box.
+    float3 edgeDst = halfSize - abs(posLocal);
+
+    // Particle is inside the inner box.
+    if (edgeDst.x >= 0 && edgeDst.y >= 0 && edgeDst.z >= 0)
+    {
+        // Find the closest face to push the particle through.
+        if (edgeDst.x < edgeDst.y && edgeDst.x < edgeDst.z)
+        {
+            posLocal.x = halfSize.x * sign(posLocal.x);
+            velocityLocal.x *= -collisionDamping;
+        }
+        else if (edgeDst.y < edgeDst.z)
+        {
+            posLocal.y = halfSize.y * sign(posLocal.y);
+            velocityLocal.y *= -collisionDamping;
+        }
+        else
+        {
+            posLocal.z = halfSize.z * sign(posLocal.z);
+            velocityLocal.z *= -collisionDamping;
+        }
+    }
+
+    // Transform resolved position/velocity back to world space
+    pos = mul(localToWorld, float4(posLocal, 1)).xyz;
+    vel = mul(localToWorld, float4(velocityLocal, 0)).xyz;
+}
+
+
 void ResolveCollisions(inout float3 pos, inout float3 vel, float collisionDamping)
 {
     // Transform position/velocity to the local space of the bounding box
@@ -467,6 +510,7 @@ void UpdatePositions(uint3 id : SV_DispatchThreadID)
     float3 pos = Positions[id.x];
     pos += vel * deltaTime;
 
+    ResolveCollisionsTest(pos, vel, collisionDamping);
     ResolveCollisions(pos, vel, collisionDamping);
 
     // Write results

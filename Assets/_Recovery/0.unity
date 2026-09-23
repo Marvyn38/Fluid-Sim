@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99a384512b94654fbeb7c06c43f81ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSpawnDensity: 1000
+  particleSpawnDensity: 1500
   initialVel:
     x: 0
     y: 0
@@ -318,10 +318,10 @@ MonoBehaviour:
   jitterStrength: 0.035
   showSpawnBounds: 1
   spawnRegions:
-  - centre: {x: 0, y: 0, z: 0}
+  - centre: {x: 0, y: 2, z: 0}
     size: 5
     debugDisplayCol: {r: 1, g: 0.42878985, b: 0.15566039, a: 1}
-  debug_num_particles: 125000
+  debug_num_particles: 185193
   debug_spawn_volume: 125
 --- !u!1 &811702636
 GameObject:
